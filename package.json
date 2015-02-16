@@ -1,0 +1,31 @@
+{
+    "name": "metaserve-css-styl",
+    "version": "0.0.1",
+    "description": "metaserve plugin for rendering CSS from .sass files with Styl and Rework",
+    "homepage": "http://github.com/prontotype-us/metaserve-css-styl",
+    "repository": {
+        "type": "git",
+        "url": "http://github.com/prontotype-us/metaserve-css-styl.git"
+    },
+    "author": {
+        "name": "Sean Robertson",
+        "url": "http://sprobertson.com"
+    },
+    "main": "lib/index.js",
+    "dependencies": {
+        "metaserve": "0.3.x",
+        "rework-color-function": "1.1.x",
+        "rework-import": "1.2.x",
+        "rework-plugin-colors": "1.0.x",
+        "rework-shade": "1.4.x",
+        "rework-variant": "0.2.x",
+        "styl": "0.2.x"
+    },
+    "keywords": [
+        "metaserve",
+        "css",
+        "styl",
+        "rework"
+    ]
+}
+
