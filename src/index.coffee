@@ -13,17 +13,19 @@ de_res = (n) -> Math.floor(n/1000)*1000
 class StylCompiler extends Compiler
 
     default_options:
+        import_dir: './static/css'
         ext: 'sass'
         vars: {}
 
     compile: (sass_filename) ->
         options = @options
+
         return (req, res, next) ->
 
             variant = rework_variant(options.vars)
             pre_transformer = (sass_src) ->
                 styl(sass_src, {whitespace: true})
-                    .use(rework_import({path: options.base_dir, transform: pre_transformer}))
+                    .use(rework_import({path: options.import_dir, transform: pre_transformer}))
                     .toString()
 
             transformer = (sass_src) ->
