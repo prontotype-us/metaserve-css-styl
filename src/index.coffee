@@ -1,7 +1,9 @@
 fs = require 'fs'
 styl = require 'styl'
+rework_calc = require 'rework-calc'
 rework_color = require 'rework-color-function'
 rework_colors = require 'rework-plugin-colors'
+rework_inherit = require 'rework-inherit'
 rework_variant = require 'rework-variant'
 rework_shade = require 'rework-shade'
 rework_import = require 'rework-import'
@@ -25,13 +27,15 @@ class StylCompiler extends Compiler
             variant = rework_variant(options.vars)
             pre_transformer = (sass_src) ->
                 styl(sass_src, {whitespace: true})
+                    .use(rework_inherit()) # `inherit: selector`
                     .use(rework_import({path: options.import_dir, transform: pre_transformer}))
                     .toString()
 
             transformer = (sass_src) ->
                 styl(pre_transformer(sass_src))
                     .use(variant) # For variable replacement
-                    .use(rework_colors()) # rgba(#xxx, 0.x) transformers
+                    .use(rework_calc) # `calc(x + y)`
+                    .use(rework_colors()) # `rgba(#xxx, 0.x)` transformers
                     .use(rework_color) # color tint functions
                     .toString()
 

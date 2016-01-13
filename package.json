@@ -1,6 +1,6 @@
 {
     "name": "metaserve-css-styl",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "metaserve plugin for rendering CSS from .sass files with Styl and Rework",
     "homepage": "http://github.com/prontotype-us/metaserve-css-styl",
     "repository": {
@@ -14,8 +14,10 @@
     "main": "lib/index.js",
     "dependencies": {
         "metaserve": "0.3.x",
+        "rework-calc": "1.1.x",
         "rework-color-function": "1.1.x",
         "rework-import": "1.2.x",
+        "rework-inherit": "0.2.x",
         "rework-plugin-colors": "1.0.x",
         "rework-shade": "1.4.x",
         "rework-variant": "0.2.x",
