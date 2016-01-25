@@ -1,6 +1,6 @@
 {
     "name": "metaserve-css-styl",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "metaserve plugin for rendering CSS from .sass files with Styl and Rework",
     "homepage": "http://github.com/prontotype-us/metaserve-css-styl",
     "repository": {
