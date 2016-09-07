@@ -5,8 +5,6 @@ rework_color = require 'rework-color-function'
 rework_colors = require 'rework-plugin-colors'
 rework_inherit = require 'rework-inherit'
 rework_variant = require 'rework-variant'
-rework_hex = require 'rework-hex'
-rework_random_hex = require 'rework-random-hex'
 rework_function = require 'rework-plugin-function'
 rework_shade = require 'rework-shade'
 rework_import = require 'rework-import'
@@ -31,21 +29,14 @@ class StylCompiler extends Compiler
                 .use(rework_import({path: options.import_dir, transform: pre_transformer}))
                 .toString()
 
-        functions =
-            mex: -> "#ffaa00"
-            black: -> "#000000"
-            slice: (s, n) -> s.slice(n)
-
         transformer = (sass_src) ->
             styl(pre_transformer(sass_src))
                 .use(rework_inherit()) # `inherit: selector`
-                .use(rework_random_hex)
                 .use(variant) # For variable replacement
                 .use(rework_calc) # `calc(x + y)`
                 .use(rework_colors()) # `rgba(#xxx, 0.x)` transformers
                 .use(rework_color) # color tint functions
-                .use(rework_hex)
-                .use(rework_function(functions)) # For functions
+                .use(rework_function(options.functions || {})) # For functions
                 .toString()
 
         # Read and compile source
