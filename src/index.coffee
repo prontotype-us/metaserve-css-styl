@@ -5,6 +5,9 @@ rework_color = require 'rework-color-function'
 rework_colors = require 'rework-plugin-colors'
 rework_inherit = require 'rework-inherit'
 rework_variant = require 'rework-variant'
+rework_hex = require 'rework-hex'
+rework_random_hex = require 'rework-random-hex'
+rework_function = require 'rework-plugin-function'
 rework_shade = require 'rework-shade'
 rework_import = require 'rework-import'
 Compiler = require 'metaserve/lib/compiler'
@@ -19,32 +22,40 @@ class StylCompiler extends Compiler
         ext: 'sass'
         vars: {}
 
-    compile: (sass_filename) ->
+    compile: (sass_filename, cb) ->
         options = @options
 
-        return (req, res, next) ->
+        variant = rework_variant(options.vars)
+        pre_transformer = (sass_src) ->
+            styl(sass_src, {whitespace: true})
+                .use(rework_import({path: options.import_dir, transform: pre_transformer}))
+                .toString()
 
-            variant = rework_variant(options.vars)
-            pre_transformer = (sass_src) ->
-                styl(sass_src, {whitespace: true})
-                    .use(rework_import({path: options.import_dir, transform: pre_transformer}))
-                    .toString()
+        functions =
+            mex: -> "#ffaa00"
+            black: -> "#000000"
+            slice: (s, n) -> s.slice(n)
 
-            transformer = (sass_src) ->
-                styl(pre_transformer(sass_src))
-                    .use(rework_inherit()) # `inherit: selector`
-                    .use(variant) # For variable replacement
-                    .use(rework_calc) # `calc(x + y)`
-                    .use(rework_colors()) # `rgba(#xxx, 0.x)` transformers
-                    .use(rework_color) # color tint functions
-                    .toString()
+        transformer = (sass_src) ->
+            styl(pre_transformer(sass_src))
+                .use(rework_inherit()) # `inherit: selector`
+                .use(rework_random_hex)
+                .use(variant) # For variable replacement
+                .use(rework_calc) # `calc(x + y)`
+                .use(rework_colors()) # `rgba(#xxx, 0.x)` transformers
+                .use(rework_color) # color tint functions
+                .use(rework_hex)
+                .use(rework_function(functions)) # For functions
+                .toString()
 
-            # Read and compile source
-            sass_src = fs.readFileSync(sass_filename).toString()
-            compiled = transformer sass_src
-
-            res.setHeader 'Content-Type', 'text/css'
-            res.end compiled
+        # Read and compile source
+        source = fs.readFileSync(sass_filename).toString()
+        compiled = transformer source
+        cb null, {
+            content_type: 'text/css'
+            source
+            compiled
+        }
 
 module.exports = (options={}) ->
     new StylCompiler(options)
