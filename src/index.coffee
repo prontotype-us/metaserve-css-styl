@@ -7,6 +7,7 @@ rework_inherit = require 'rework-inherit'
 rework_variant = require 'rework-variant'
 rework_function = require 'rework-plugin-function'
 rework_import = require 'rework-import'
+autoprefixer = require 'autoprefixer'
 
 VERBOSE = process.env.METASERVE_VERBOSE?
 
@@ -29,7 +30,7 @@ module.exports =
                 .toString()
 
         transformer = (sass_src) ->
-            styl(pre_transformer(sass_src))
+            css = styl(pre_transformer(sass_src))
                 .use(rework_inherit()) # `inherit: selector`
                 .use(variant) # For variable replacement
                 .use(rework_calc) # `calc(x + y)`
@@ -37,6 +38,7 @@ module.exports =
                 .use(rework_color) # color tint functions
                 .use(rework_function(config.functions || {})) # For functions
                 .toString()
+            css = autoprefixer.process(css).css
 
         # Read and compile source
         source = fs.readFileSync(filename).toString()
