@@ -26,7 +26,7 @@ module.exports =
         variant = rework_variant(context)
         pre_transformer = (sass_src) ->
             styl(sass_src, {whitespace: true})
-                .use(rework_import({path: config.base_dir + '/css', transform: pre_transformer}))
+                .use(rework_import({path: config.static_dir + '/css', transform: pre_transformer}))
                 .toString()
 
         transformer = (sass_src) ->
